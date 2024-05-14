@@ -4,3 +4,4 @@ uploads/
 *.pyc
 *.pyo
 .DS_Store
+model.keras
