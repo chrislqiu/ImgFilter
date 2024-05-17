@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clear Shots</title>
+    <title>Clean Shots</title>
     <link rel="stylesheet" href="static/styles.css">
     <link rel="icon" type="image/png" href="static/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="navigation-bar">
@@ -14,38 +17,22 @@
             style="width: 50px; height: 50px; box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5); margin-top: 10px;"/>
         </div>
     </div>
-    <h1>Upload an Image for Prediction</h1>
-    <form id="uploadForm">
-        <label for="file">Choose an image:</label>
-        <input type="file" id="file" name="file" accept="image/*" required>
-        <button type="submit">Upload</button>
-    </form>
-    <div id="result"></div>
+    <div class="container">
+        <div class="column1">
+            <img class="img2_style" src="/static/img2.jpg" alt="img" width="60%">
+            <img class="img1_style" src="/static/rectangle.jpeg" alt="initiation" width="90%">
+        </div>
+        <div class="columnMid">
+            <p class="caveat-font">Have a folder with tons of pictures for social media, but cannot use the ones with traces of alcohol in them? </p>
+            <p class="caveat-font">Fortunately for you, Clean Shots will filter out all the images with possible traces of alcohol and give you a folder of images you can look through that is safe for social media. </p>
+            <p class="caveat-font">Press the button below to upload your folder (png, jpg, & jpeg images)</p>
 
-    <script>
-        document.getElementById('uploadForm').addEventListener('submit', async function(event) {
-            event.preventDefault();
-            const fileInput = document.getElementById('file');
-            const formData = new FormData();
-            formData.append('file', fileInput.files[0]);
 
-            try {
-                const response = await fetch('/predict', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
-                const result = await response.json();
-                document.getElementById('result').innerText = `Prediction score: ${result.score}`;
-            } catch (error) {
-                console.error('There was a problem with the fetch operation:', error);
-                document.getElementById('result').innerText = 'Error: Could not get prediction';
-            }
-        });
-    </script>
+        </div>
+        <div class="column3">
+            <img class="img4_style" src="/static/rectangle2.jpeg" alt="square" width="100%">
+            <img class="img3_style" src="/static/square.png" alt="square" width="80%">
+        </div>
+    </div>
 </body>
 </html>
