@@ -1,10 +1,25 @@
 body {
     font-family: Arial, sans-serif;
-    margin: 20px;
+    margin: 0px;
+    background-color: #faefd2;
 }
 h1 {
-    color: #333;
+    color: #998577;
+    margin: 20px;
 }
 form {
-    margin-top: 20px;
+    margin: 20px;
 }
+#navigation-container {
+    width: 1200px;
+    margin: 0 auto;
+    height: 70px;
+  }
+  
+  .navigation-bar {
+    box-shadow: 0px .5px 15px rgba(0, 0, 0, 0.5);
+    background-color: #d2b48c;
+    height: 70px;
+    width: 100%;
+    text-align:center;
+  }

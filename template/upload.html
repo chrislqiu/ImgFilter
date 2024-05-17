@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear Shots</title>
+    <link rel="stylesheet" href="static/styles.css">
+    <link rel="icon" type="image/png" href="static/favicon.png">
+</head>
+<body>
+    <div class="navigation-bar">
+        <div id="navigation-container">
+          <img src="/static/webIcon.png" alt="pic not loading" 
+            style="width: 50px; height: 50px; box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5); margin-top: 10px;"/>
+        </div>
+    </div>
+    <h1>Upload an Image for Prediction</h1>
+    <form id="uploadForm">
+        <label for="file">Choose an image:</label>
+        <input type="file" id="file" name="file" accept="image/*" required>
+        <button type="submit">Upload</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const fileInput = document.getElementById('file');
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const result = await response.json();
+                document.getElementById('result').innerText = `Prediction score: ${result.score}`;
+            } catch (error) {
+                console.error('There was a problem with the fetch operation:', error);
+                document.getElementById('result').innerText = 'Error: Could not get prediction';
+            }
+        });
+    </script>
+</body>
+</html>
