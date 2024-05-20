@@ -80,5 +80,7 @@ body {
     box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.8);  
     margin-top: 20px;
 }
-
+.button {
+    background-color: #ffffff00;
+}
 

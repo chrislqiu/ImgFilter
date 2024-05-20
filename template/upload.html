@@ -26,8 +26,28 @@
             <p class="caveat-font">Have a folder with tons of pictures for social media, but cannot use the ones with traces of alcohol in them? </p>
             <p class="caveat-font">Fortunately for you, Clean Shots will filter out all the images with possible traces of alcohol and give you a folder of images you can look through that is safe for social media. </p>
             <p class="caveat-font">Press the button below to upload your folder (png, jpg, & jpeg images)</p>
+            <form id="uploadForm">
+                <input type="file" id="fileInput" name="file" style="display: none;" accept="image/*">
+                
+                <button class="button" type="button" id="uploadButton">
+                    <img src="/static/upload.png" alt="uploadButton" style="width: 50px; height: 50px;">
+                </button>
+            </form>
 
-
+            <script>
+                document.getElementById('uploadButton').addEventListener('click', function() {
+                    document.getElementById('fileInput').click();
+                });
+        
+                document.getElementById('fileInput').addEventListener('change', function(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        // Handle the file upload process
+                        console.log('Selected file:', file);
+                        // You can add more code here to handle the file upload
+                    }
+                });
+            </script>
         </div>
         <div class="column3">
             <img class="img4_style" src="/static/rectangle2.jpeg" alt="square" width="100%">
