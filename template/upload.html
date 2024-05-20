@@ -27,32 +27,62 @@
             <p class="caveat-font">Fortunately for you, Clean Shots will filter out all the images with possible traces of alcohol and give you a folder of images you can look through that is safe for social media. </p>
             <p class="caveat-font">Press the button below to upload your folder (png, jpg, & jpeg images)</p>
             <form id="uploadForm">
-                <input type="file" id="fileInput" name="file" style="display: none;" accept="image/*">
+                <input type="file" id="fileInput" name="file" style="display: none;" webkitdirectory mozdirectory multiple>
                 
                 <button class="button" type="button" id="uploadButton">
                     <img src="/static/upload.png" alt="uploadButton" style="width: 50px; height: 50px;">
                 </button>
             </form>
-
-            <script>
-                document.getElementById('uploadButton').addEventListener('click', function() {
-                    document.getElementById('fileInput').click();
-                });
-        
-                document.getElementById('fileInput').addEventListener('change', function(event) {
-                    const file = event.target.files[0];
-                    if (file) {
-                        // Handle the file upload process
-                        console.log('Selected file:', file);
-                        // You can add more code here to handle the file upload
-                    }
-                });
-            </script>
+            <button class="button" type="button" id="filterButton">Filter Images</button>
+            <div id="result"></div>
         </div>
         <div class="column3">
             <img class="img4_style" src="/static/rectangle2.jpeg" alt="square" width="100%">
             <img class="img3_style" src="/static/square.png" alt="square" width="80%">
         </div>
     </div>
+    <script>
+        document.getElementById('uploadButton').addEventListener('click', function() {
+            console.log('Upload button clicked');
+            document.getElementById('fileInput').click();
+        });
+
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            console.log('Files selected:', event.target.files);
+            const files = event.target.files;
+            if (files.length) {
+                console.log('Selected files:', files);
+            }
+        });
+
+        document.getElementById('filterButton').addEventListener('click', async function() {
+            console.log('Filter button clicked');
+            const fileInput = document.getElementById('fileInput');
+            const formData = new FormData();
+            for (const file of fileInput.files) {
+                formData.append('files', file);
+            }
+
+            try {
+                const response = await fetch('/filter', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const result = await response.json();
+                const downloadLink = document.createElement('a');
+                downloadLink.href = result.download_url;
+                downloadLink.textContent = 'Download Filtered Images';
+                document.getElementById('result').appendChild(downloadLink);
+            } catch (error) {
+                console.error('There was a problem with the fetch operation:', error);
+                document.getElementById('result').innerText = 'Error: Could not filter images';
+            }
+        });
+    </script>
 </body>
 </html>
