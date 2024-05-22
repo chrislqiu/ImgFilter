@@ -20,10 +20,14 @@ def allowed_file(filename):
 def filter_image(file_path):
     img = tf.keras.preprocessing.image.load_img(file_path, target_size=(416, 416))
     img_array = tf.keras.preprocessing.image.img_to_array(img)
-    img_array = tf.expand_dims(img_array, 0)
+    img_array = tf.expand_dims(img_array, 0)  # Add batch dimension
+
+    # Preprocess the image as your model expects
+    img_array = tf.keras.applications.mobilenet_v2.preprocess_input(img_array)
+
     predictions = model.predict(img_array)
-    score = predictions[0][0]
-    return score < 0.5  
+    score = predictions[0][0]  # Assuming binary classification with sigmoid output
+    return score < 0.5  # Assuming that a score < 0.5 means "no alcohol"
 
 @app.route('/')
 def home():
@@ -38,7 +42,7 @@ def filter_images():
     if not files:
         return jsonify({"error": "No selected files"}), 400
 
-    uploaded_images = []
+    filtered_images = []
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     os.makedirs(app.config['FILTERED_FOLDER'], exist_ok=True)
 
@@ -47,16 +51,22 @@ def filter_images():
             filename = secure_filename(file.filename)
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(file_path)
-            uploaded_images.append(file_path)
 
-    if not uploaded_images:
-        return jsonify({"error": "No images were uploaded"}), 400
+            if filter_image(file_path):  # Apply the model for filtering
+                filtered_path = os.path.join(app.config['FILTERED_FOLDER'], filename)
+                os.rename(file_path, filtered_path)
+                filtered_images.append(filtered_path)
+            else:
+                os.remove(file_path)  # Delete the image if it doesn't pass the filter
+
+    if not filtered_images:
+        return jsonify({"error": "No images passed the filtering"}), 400
 
     zip_filename = "filtered_images.zip"
     zip_path = os.path.join(app.config['FILTERED_FOLDER'], zip_filename)
 
     with zipfile.ZipFile(zip_path, 'w') as zipf:
-        for image in uploaded_images:
+        for image in filtered_images:
             arcname = os.path.join('filtered_images', os.path.basename(image))
             zipf.write(image, arcname)
 
