@@ -38,7 +38,7 @@ def filter_images():
     if not files:
         return jsonify({"error": "No selected files"}), 400
 
-    filtered_images = []
+    uploaded_images = []
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     os.makedirs(app.config['FILTERED_FOLDER'], exist_ok=True)
 
@@ -47,23 +47,18 @@ def filter_images():
             filename = secure_filename(file.filename)
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(file_path)
+            uploaded_images.append(file_path)
 
-            if filter_image(file_path):
-                filtered_path = os.path.join(app.config['FILTERED_FOLDER'], filename)
-                os.rename(file_path, filtered_path)
-                filtered_images.append(filtered_path)
-            else:
-                os.remove(file_path)
-
-    if not filtered_images:
-        return jsonify({"error": "No images passed the filtering"}), 400
+    if not uploaded_images:
+        return jsonify({"error": "No images were uploaded"}), 400
 
     zip_filename = "filtered_images.zip"
     zip_path = os.path.join(app.config['FILTERED_FOLDER'], zip_filename)
 
     with zipfile.ZipFile(zip_path, 'w') as zipf:
-        for image in filtered_images:
-            zipf.write(image, os.path.basename(image))
+        for image in uploaded_images:
+            arcname = os.path.join('filtered_images', os.path.basename(image))
+            zipf.write(image, arcname)
 
     return jsonify({"download_url": f"/download/{zip_filename}"}), 200
 
