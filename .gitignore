@@ -5,3 +5,4 @@ uploads/
 *.pyo
 .DS_Store
 model.keras
+filtered_images.zip
