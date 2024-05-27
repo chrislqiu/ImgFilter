@@ -7,3 +7,5 @@ An image filter app that is a Flask-based web application designed to filter out
 - Can have a ton of pictures, which takes time to select since some can include traces of alcohol
 ### Solution?
 - An application that allows its users to quickly filter out any images that has any trace of alcohol
+### Homepage
+<img width="1440" alt="Screenshot 2024-05-27 at 6 01 28 PM" src="https://github.com/chrislqiu/ImgFilter/assets/89666114/589a6c58-21a9-478c-88e8-8eadf7e040fe">
